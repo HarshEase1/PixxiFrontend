@@ -1,24 +1,24 @@
+// app/task/page.js
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import Head from "next/head";
-import { useParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Inter } from "next/font/google";
 
-import { apiEndpoints, baseApi } from "../../baseApi";
-// import BackButton from "../../components/BackButton";
-// import ReportSection from "@/components/ReportSection";
+import { apiEndpoints, baseApi } from "../baseApi"; // Adjusted path to go up one level
 import BackButton from "@/app/components/BackButton";
 import ReportSection from "@/app/components/ReportSection";
+
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
 });
 
-
-export default function TaskResultPage() {
-  const params = useParams();
-  const taskId = params.taskId;
+// 1. We extract the main logic into a component that reads the URL params
+function TaskResultContent() {
+  const searchParams = useSearchParams();
+  const taskId = searchParams.get("taskId"); // Reads ?taskId=... from the URL
 
   const [status, setStatus] = useState("loading");
   const [progress, setProgress] = useState(0);
@@ -96,9 +96,9 @@ export default function TaskResultPage() {
 
   return (
     <div className={`min-h-screen relative overflow-hidden ${inter.className}`}>
-    <div className="no-print">
-    <BackButton />
-    </div>
+      <div className="no-print">
+        <BackButton />
+      </div>
 
       <Head>
         <title>Analysis Report | Pixii Assignment</title>
@@ -165,16 +165,16 @@ export default function TaskResultPage() {
         )}
 
         {report && (
-        <div className="no-print flex justify-center mb-8">
+          <div className="no-print flex justify-center mb-8">
             <a
-            href={`http://206.189.133.225${apiEndpoints.downloadPdf(taskId)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-purple-600 via-blue-500 to-pink-500 px-8 py-5 text-white font-black shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-purple-500/40"
+              href={`http://206.189.133.225${apiEndpoints.downloadPdf(taskId)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-purple-600 via-blue-500 to-pink-500 px-8 py-5 text-white font-black shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-purple-500/40"
             >
-            Download PDF Report
+              Download PDF Report
             </a>
-        </div>
+          </div>
         )}
         {report && <ReportSection report={report} />}
       </main>
@@ -198,55 +198,68 @@ export default function TaskResultPage() {
         }
 
         .review-scrollbar::-webkit-scrollbar {
-  width: 7px;
-}
+          width: 7px;
+        }
 
-.review-scrollbar::-webkit-scrollbar-track {
-  background: #f3f4f6;
-  border-radius: 999px;
-}
+        .review-scrollbar::-webkit-scrollbar-track {
+          background: #f3f4f6;
+          border-radius: 999px;
+        }
 
-.review-scrollbar::-webkit-scrollbar-thumb {
-  background: #c4b5fd;
-  border-radius: 999px;
-}
+        .review-scrollbar::-webkit-scrollbar-thumb {
+          background: #c4b5fd;
+          border-radius: 999px;
+        }
 
-.review-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #8b5cf6;
-}
+        .review-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #8b5cf6;
+        }
 
-@media print {
-  .no-print {
-    display: none !important;
-  }
+        @media print {
+          .no-print {
+            display: none !important;
+          }
 
-  html,
-  body {
-    background: #ffffff !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
+          html,
+          body {
+            background: #ffffff !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
 
-  .fixed {
-    position: absolute !important;
-  }
+          .fixed {
+            position: absolute !important;
+          }
 
-  section,
-  article {
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
+          section,
+          article {
+            break-inside: avoid;
+            page-break-inside: avoid;
+          }
 
-  img {
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
+          img {
+            break-inside: avoid;
+            page-break-inside: avoid;
+          }
 
-  a {
-    text-decoration: none !important;
-  }
-}
+          a {
+            text-decoration: none !important;
+          }
+        }
       `}</style>
     </div>
+  );
+}
+
+// 2. We wrap it in a Suspense boundary to satisfy Next.js static export rules
+export default function TaskResultPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-black/90 flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    }>
+      <TaskResultContent />
+    </Suspense>
   );
 }

@@ -1,3 +1,4 @@
+// app/page.js
 "use client";
 
 import { useState } from "react";
@@ -55,7 +56,8 @@ export default function Home() {
 
   const handleSelectHistory = async (taskId) => {
     setSelectedHistoryTaskId(taskId);
-    router.push(`/task/${taskId}`);
+    // Updated routing push here:
+    router.push(`/task?taskId=${taskId}`);
   };
 
   const handleSubmit = async (e) => {
@@ -76,7 +78,8 @@ export default function Home() {
         asin: cleanAsin,
       });
 
-      router.push(`/task/${data.task_id}`);
+      // Updated routing push here:
+      router.push(`/task?taskId=${data.task_id}`);
     } catch (err) {
       setStatus("failed");
       setError(err.message || "Failed to start analysis");
