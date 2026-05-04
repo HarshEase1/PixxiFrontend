@@ -13,7 +13,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'http://206.189.133.225/api/:path*',
+        destination: 'https://pixii.selectease.in/api/:path*',
       },
     ];
   },

@@ -1,5 +1,5 @@
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://206.189.133.225";
+  process.env.NEXT_PUBLIC_API_BASE_URL || "https://pixii.selectease.in";
 
 async function request(endpoint, options = {}) {
   const url = `${API_BASE_URL}${endpoint}`;

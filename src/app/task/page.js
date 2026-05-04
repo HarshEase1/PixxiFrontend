@@ -167,7 +167,7 @@ function TaskResultContent() {
         {report && (
           <div className="no-print flex justify-center mb-8">
             <a
-              href={`http://206.189.133.225${apiEndpoints.downloadPdf(taskId)}`}
+              href={`https://pixii.selectease.in${apiEndpoints.downloadPdf(taskId)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-purple-600 via-blue-500 to-pink-500 px-8 py-5 text-white font-black shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-purple-500/40"
