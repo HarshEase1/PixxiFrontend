@@ -1,8 +1,22 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
-  reactCompiler: true,
-  output:"export",
-};
+  output: 'export',
+  
+  images: {
+    unoptimized: true,
+  },
+  
+  trailingSlash: true,
+  
+  // ✅ ADD THIS: Proxy API requests to avoid CORS and mixed content
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://206.189.133.225/api/:path*',
+      },
+    ];
+  },
+}
 
-export default nextConfig;
+export default nextConfig
